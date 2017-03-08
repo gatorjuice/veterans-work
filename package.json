@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/the-difference-engine/veterans-work#readme",
   "devDependencies": {
-    "babel-preset-env": "^1.2.1",
+    "babel-preset-modern-browsers": "^8.1.2",
     "jasmine": "^2.5.3",
     "jasmine-core": "^2.5.2",
     "karma": "^1.5.0",
