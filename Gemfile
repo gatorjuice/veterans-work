@@ -37,6 +37,9 @@ gem 'cancancan', '~> 1.15.0'
 gem 'rolify', '~> 5.1.0'
 gem 'geocoder', '~> 1.4.3'
 gem 'angularjs-rails', '~> 1.6.2'
+# es6
+gem "sprockets"
+gem "sprockets-es6"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
