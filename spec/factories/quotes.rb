@@ -1,12 +1,11 @@
 FactoryGirl.define do
   factory :quote do
-    customer_id 1
-    company_id 1
-    materials_cost_estimate "9.99"
-    labor_cost_estimate "9.99"
-    start_date "MyString"
-    completion_date_estimate "MyString"
-    materials "MyText"
+    customer_request
+    company
+    materials_cost_estimate 456.00
+    labor_cost_estimate 500.00
+    start_date Faker::Date.between(2.days.ago, Date.today)
+    completion_date_estimate Faker::Date.between(Date.today, Date.today + 30)
     notes "MyText"
   end
 end
