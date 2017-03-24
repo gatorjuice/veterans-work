@@ -1,7 +1,7 @@
 <h1>New Quote</h1>
 <%= form_for @quote do |f| %>
   <div>
-    <%= label_tag :materials_cost_estimate %>
+    <%= label_tag :materials_cost_estimate, @quote.materials_cost_estimate, class: "form-control" %>
     <%= f.number_field :materials_cost_estimate %>
   </div>
   <div>
@@ -21,7 +21,7 @@
     <%= f.text_field :notes %>
   </div>
 
-    <%= f.hidden_field :customer_request_id, value: @customer_request_id %>
- 
+  <%= f.hidden_field :customer_request_id, value: @customer_request_id %>
+
 <%= submit_tag "Submit" %>
 <% end %>
