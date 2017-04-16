@@ -1,3 +1,26 @@
+# == Schema Information
+#
+# Table name: customer_requests
+#
+#  id                  :integer          not null, primary key
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  address             :string
+#  city                :string
+#  state               :string
+#  zipcode             :string
+#  service_category_id :integer
+#  description         :text
+#  customer_id         :integer
+#  expires_date        :date
+#  latitude            :float
+#  longitude           :float
+#
+# Indexes
+#
+#  index_customer_requests_on_expires_date  (expires_date)
+#
+
 require 'rails_helper'
 
 RSpec.describe CustomerRequestsController, type: :controller do
@@ -69,7 +92,8 @@ RSpec.describe CustomerRequestsController, type: :controller do
 
   describe 'POST #create' do
     it 'creates and saves a new customer request to the database' do
-      sign_in create(:customer)
+      customer = create(:customer)
+      sign_in customer
       expect{
         post :create, params: { customer_request: attributes_for(:customer_request) }
       }.to change(CustomerRequest, :count).by(1)

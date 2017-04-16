@@ -17,8 +17,8 @@ class CustomerRequestsController < ApplicationController
   end
 
   def create
-    @request = CustomerRequest.new(customer_request_params)
-    @request.save
+    p customer_request_params
+    CustomerRequest.create(customer_request_params)
     flash[:success] = "You did it!"
     redirect_to "/customers/#{current_customer.id}"
   end
