@@ -11,6 +11,7 @@
 
 FactoryGirl.define do
   factory :contract do
-    
+    quote
+    customer_request
   end
 end
