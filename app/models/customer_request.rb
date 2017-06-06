@@ -16,10 +16,15 @@
 #  latitude            :float
 #  longitude           :float
 #
+# Indexes
+#
+#  index_customer_requests_on_expires_date  (expires_date)
+#
 
 class CustomerRequest < ApplicationRecord
   belongs_to :service_category
   belongs_to :customer
+  belongs_to :contract
 
   has_many :quotes
 
@@ -30,7 +35,11 @@ class CustomerRequest < ApplicationRecord
     "#{address}, #{city}, #{state}, #{zipcode}"
   end
 
-  def distance_from_current_company
-    current_company
+  def open_quotes
+    quotes.where(accepted: nil)
+  end
+
+  def accepted_quotes
+    quotes.where(accepted: true)
   end
 end

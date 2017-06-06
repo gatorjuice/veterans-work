@@ -8,7 +8,7 @@
 #  reset_password_token   :string
 #  reset_password_sent_at :datetime
 #  remember_created_at    :datetime
-#  sign_in_count          :integer          default("0"), not null
+#  sign_in_count          :integer          default(0), not null
 #  current_sign_in_at     :datetime
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :inet
@@ -26,9 +26,17 @@
 #  city                   :string
 #  state                  :string
 #  service_radius         :float
+#  status                 :string           default("Pending")
+#  confirmation_token     :string
+#  confirmed_at           :datetime
+#  confirmation_sent_at   :datetime
 #
-
-require "rails_helper"
+# Indexes
+#
+#  index_companies_on_confirmation_token    (confirmation_token) UNIQUE
+#  index_companies_on_email                 (email) UNIQUE
+#  index_companies_on_reset_password_token  (reset_password_token) UNIQUE
+#
 
 COMPANY_ADDRESS_DETAILS = {
   address: "2515 W FLETCHER",
@@ -52,8 +60,11 @@ FAR_CUSTOMER_REQUEST_ADDRESS_DETAILS = {
 }
 
 RSpec.describe Company, type: :model do
-  it "has a valid factory" do
-    expect(FactoryGirl.build(:company)).to be_valid
+
+  describe "validations" do
+    it "has a valid factory" do
+      expect(FactoryGirl.build(:company)).to be_valid
+    end
   end
 
   describe "#shorten_zip_code" do

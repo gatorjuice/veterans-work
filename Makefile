@@ -4,20 +4,21 @@ BE=bundle exec
 
 install:
 	bundle install
-	npm install
 
 migrate:
 	$(BE) rake db:migrate
 
 test: install
 	$(BE) rspec
-	npm test
 
 server: install
 	$(BE) rails s
 
 console: install
 	$(BE) rails c
+
+mailcatcher:
+	$(BE) mailcatcher
 
 print_to_terminal: install
 	echo 'what the flip'

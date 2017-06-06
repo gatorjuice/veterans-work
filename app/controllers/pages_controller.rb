@@ -6,6 +6,8 @@ class PagesController < ApplicationController
       redirect_to "/customer_requests"
     elsif  current_customer
       redirect_to "/customers/#{current_customer.id}"
+    elsif current_admin
+      redirect_to "/admins"
     else
       render "index.html.erb"
     end
@@ -14,5 +16,4 @@ class PagesController < ApplicationController
   def about
     render "about.html"
   end
-
 end

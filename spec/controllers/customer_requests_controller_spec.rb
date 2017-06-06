@@ -1,11 +1,32 @@
-require 'rails_helper'
+# == Schema Information
+#
+# Table name: customer_requests
+#
+#  id                  :integer          not null, primary key
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  address             :string
+#  city                :string
+#  state               :string
+#  zipcode             :string
+#  service_category_id :integer
+#  description         :text
+#  customer_id         :integer
+#  expires_date        :date
+#  latitude            :float
+#  longitude           :float
+#
+# Indexes
+#
+#  index_customer_requests_on_expires_date  (expires_date)
+#
 
 RSpec.describe CustomerRequestsController, type: :controller do
   describe 'GET #index' do
     context 'company signed in' do
 
       before :each do
-        sign_in create :company
+        sign_in create :company, status: "Active"
       end
 
       it 'assigns all eligible customer request to @requests' do
@@ -22,12 +43,81 @@ RSpec.describe CustomerRequestsController, type: :controller do
         get :index
         expect(response).to render_template("index.html.erb")
       end
+
+      it 'doesn\'t assign expired customer request to @requests' do
+        service_category = create(:service_category)
+        company = create(:company,
+          status: "Active",
+          latitude: 0.0,
+          longitude: 0.0,
+          service_radius: 1.0
+        )
+        sign_in company
+        company_service = create(:company_service,
+          service_category_id: service_category.id,
+          company_id: company.id
+        )
+        customer_request_1 = create(:customer_request,
+          latitude: 0.0,
+          longitude: 0.0,
+          service_category_id: service_category.id,
+          expires_date: Date.today
+        )
+        customer_request_3 = create(:customer_request,
+          latitude: 0.0,
+          longitude: 0.0,
+          service_category_id: service_category.id,
+          expires_date: Date.today - 2
+        )
+
+        get :index
+        expect(assigns(:requests)).to eq([customer_request_1])
+      end
+
     end
 
     context 'company not signed in' do
       it 'redirects to the company sign in page' do
         get :index
-        expect(response).to redirect_to('/companies/sign_in')
+        expect(response).to redirect_to('/')
+      end
+    end
+  end
+
+  describe 'GET #index' do
+    context 'company has a pending status' do
+
+      before :each do
+        @company = create :company, status: "Pending"
+        sign_in @company
+      end
+
+      it 'redirects company to their show page' do
+        get :index
+        expect(response).to redirect_to("/companies/#{@company.id}")
+      end
+    end
+  end
+
+  describe 'GET #index' do
+    context 'customer signed in' do
+
+      before :each do
+        @customer = create :customer
+        sign_in @customer
+      end
+
+      it 'does not show customer expired customer requests' do
+        customer_request_1 = create(:customer_request,
+          customer_id: @customer.id,
+          expires_date: Date.today
+        )
+        customer_request_3 = create(:customer_request,
+          customer_id: @customer.id,
+          expires_date: Date.today - 11
+        )
+        get :index
+        expect(assigns(:requests)).to eq([customer_request_1])
       end
     end
   end
@@ -112,24 +202,15 @@ RSpec.describe CustomerRequestsController, type: :controller do
     end
   end
 
-  describe 'GET #edit' do
-    it '' do
-    end
-    it '' do
-    end
-  end
+  # describe 'GET #edit' do
 
-  describe 'PATCH #update' do
-    it '' do
-    end
-    it '' do
-    end
-  end
+  # end
 
-  describe 'DELETE #destroy' do
-    it '' do
-    end
-    it '' do
-    end
-  end
+  # describe 'PATCH #update' do
+
+  # end
+
+  # describe 'DELETE #destroy' do
+
+  # end
 end
