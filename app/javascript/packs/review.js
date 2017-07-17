@@ -1,3 +1,7 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+
 class Review extends React.Component {
 
   constructor(props) {
@@ -60,3 +64,10 @@ class Review extends React.Component {
     console.log("clicked");
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  ReactDOM.render(
+    <Review />,
+    document.getElementById('app')
+  )
+})
