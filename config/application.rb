@@ -23,3 +23,9 @@ module VeteransWork
     end
   end
 end
+
+unless Rails.env.test?
+  Raven.configure do |config|
+    config.dsn = ENV["SENTRY_DSN"]
+  end
+end

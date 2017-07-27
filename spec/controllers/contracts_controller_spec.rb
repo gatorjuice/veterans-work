@@ -3,11 +3,13 @@
 # Table name: contracts
 #
 #  id                  :integer          not null, primary key
+#  quote_id            :integer
+#  customer_request_id :integer
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  quote_id            :string
-#  customer_request_id :string
 #
+
+require 'rails_helper' 
 
 RSpec.describe ContractsController, type: :controller do
   describe 'POST #create' do
@@ -109,7 +111,9 @@ RSpec.describe ContractsController, type: :controller do
       get :show, params: { id: @contract.id }
       expect(assigns(:contract)).to eq(@contract)
     end
-    it 'redirects to show page if not logged in as current Company or Customer' do
+
+    context 'when current_customer or current_company is not logged in' do
+      it 'redirects to show page if not logged in as current Company or Customer' do
       @contract = create(
         :contract,
         customer_request_id: 5,
@@ -117,6 +121,7 @@ RSpec.describe ContractsController, type: :controller do
       )
       get :show, params: { id: @contract.id }
       expect(response).to redirect_to('/')
+      end
     end
   end
 end

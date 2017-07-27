@@ -15,7 +15,7 @@
 #  accepted                 :boolean
 #  customer_viewed          :boolean          default(FALSE)
 #
-
+require 'rails_helper'
 RSpec.describe QuotesController, type: :controller do
   describe 'GET #index' do
     context 'with customer signed in' do
@@ -29,6 +29,17 @@ RSpec.describe QuotesController, type: :controller do
           get :index, params: { request_id: cr1.id }
           expect(assigns(:customer_requests)).to match_array [cr1]
         end
+      end
+
+      it 'only shows quotes that arent expired' do
+        customer = create(:customer)
+        sign_in customer
+        cr1 = create(:customer_request, customer_id: customer.id, expires_date: Date.today()-1)
+        cr2 = create(:customer_request, customer_id: customer.id, expires_date: Date.today()+1)
+        create(:quote, customer_request_id: cr1.id)
+        create(:quote, customer_request_id: cr2.id)
+        get :index
+        expect(assigns(:customer_requests)).to match_array [cr2]
       end
 
       it 'assigns the proper customer_requests to @customer_requests' do
@@ -181,6 +192,57 @@ RSpec.describe QuotesController, type: :controller do
       quote = create(:quote)
       get :show, params: {id: quote.id}
       expect(assigns(:quote)).to eq(quote)
+    end
+
+    it 'updates customer_viewed to true if it is the current_customer clicking
+    on the quote' do
+      customer = create(:customer)
+      sign_in customer
+      customer_request = create(:customer_request, customer_id: customer.id)
+      quote = create(:quote, customer_request_id: customer_request.id)
+      get :show, params: {id: quote.id}
+      quote.reload
+      expect(quote.customer_viewed).to eq(true)
+    end
+
+    it 'does not update customer_viewed to true if a company clicks
+    on the quote' do
+      company = create(:company)
+      sign_in company
+      customer_request = create(:customer_request)
+      quote = create(:quote, customer_request_id: customer_request.id)
+      get :show, params: {id: quote.id}
+      quote.reload
+      expect(quote.customer_viewed).to eq(false)
+    end
+  end
+
+  describe 'PATCH #update' do
+    context 'when current_customer is logged in' do
+      it 'assigns the requested quote to @quote' do 
+        customer = create(:customer)
+        sign_in customer
+        quote = create(:quote)
+        patch :update, params: {id: quote.id}
+        quote.reload
+        expect(quote.accepted).to eq(false)
+      end
+
+      it 'assigns the quote id' do
+        customer = create(:customer)
+        sign_in customer
+        quote = create(:quote)
+        patch :update, params: {id: quote.id}
+        expect(assigns(:quote)).to eq(quote)
+      end
+    end
+
+    context 'when current_customer is not logged in' do
+      it 'redirects to the quotes show page if not current_customer' do
+        quote = create(:quote)
+        patch :update, params: {id: quote.id}
+        expect(response).to redirect_to("/quotes/#{quote.id}")
+      end
     end
   end
 end

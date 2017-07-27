@@ -18,9 +18,19 @@ console: install
 	$(BE) rails c
 
 mailcatcher:
-	$(BE) mailcatcher
+	@echo THIS COMMAND HAS BEEN DISABLED.
+	@echo please see the readme.
 
-print_to_terminal: install
-	echo 'what the flip'
+seed:
+	$(BE) rake db:drop
+	$(BE) rake db:create
+	$(BE) rake db:migrate
+	$(BE) rake db:seed
 
-.PHONY: install test server console migrate
+coverage: test
+	open ./coverage/index.html
+
+js_dev:
+	./bin/webpack --watch --progress --colors
+
+.PHONY: install test server console migrate coverage

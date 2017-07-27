@@ -5,12 +5,16 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+<<<<<<< HEAD
 ruby "2.3.2"
+=======
+ruby "2.3.1"
+>>>>>>> e31df1f320cd25f81ef023369792940335566333
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.1'
+gem 'rails', '~> 5.1.2'
 gem 'pry'
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 0.18'
+gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
@@ -32,20 +36,24 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+gem 'paperclip', '~> 5.0.0'
 gem 'area'
-gem 'devise', '~> 4.2.0'
+gem 'devise', '~> 4.3.0'
 gem 'cancancan', '~> 1.15.0'
 gem 'rolify', '~> 5.1.0'
 gem 'geocoder', '~> 1.4.3'
-gem 'angularjs-rails', '~> 1.6.2'
 gem 'rubocop', '~> 0.47.1', require: false
 gem 'figaro'
+# validate submited company websites
+gem 'validate_url'
 # pg_search allows fast seaching by any field on model
 gem 'pg_search'
 # react
 gem "react-rails"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+gem "sentry-raven"
+gem 'webpacker', '~> 2.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -55,6 +63,7 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'simplecov', :require => false
   gem 'faker', '~> 1.7.3'
+  gem 'dotenv-rails'
 end
 
 group :development do
@@ -65,10 +74,11 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'annotate'
-  gem 'mailcatcher'
+  gem 'seed_dump'
 end
 
 group :test do
+  gem 'capybara', '~> 2.14.4'
   gem 'rake', '~> 11.3.0'
   gem 'database_cleaner'
 end

@@ -47,13 +47,13 @@ class Companies::RegistrationsController < Devise::RegistrationsController
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :zip_code, :phone,
-      :description, :url, :address, :city, :state, :service_radius, :service_category])
+      :description, :url, :address, :city, :state, :service_radius, :service_category, :avatar])
   end
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_account_update_params
     devise_parameter_sanitizer.permit(:account_update, keys: [:name, :zip_code, :phone,
-      :description, :url, :address, :city, :state, :service_radius, :service_category])
+      :description, :url, :address, :city, :state, :service_radius, :service_category, :avatar])
   end
 
   # The path used after sign up.
@@ -66,6 +66,7 @@ class Companies::RegistrationsController < Devise::RegistrationsController
   #   super(resource)
   # end
 
+<<<<<<< HEAD
   def reset_company_services
     if resource.company_services
       resource.company_services.destroy_all
@@ -75,6 +76,21 @@ class Companies::RegistrationsController < Devise::RegistrationsController
         company_id: resource.id,
         service_category_id: service_category.to_i
       )
+=======
+  def create_company_services_at_sign_up
+    reset_company_services
+  end
+
+  def reset_company_services
+    resource.company_services.destroy_all if resource.company_services
+    if params[:service_category]
+      params[:service_category].each do |service_category|
+        CompanyService.create(
+          company_id: resource.id,
+          service_category_id: service_category.to_i
+        )
+      end
+>>>>>>> e31df1f320cd25f81ef023369792940335566333
     end
   end
 end
